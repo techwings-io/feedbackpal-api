@@ -29,10 +29,10 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v1
         with:
-          images: '' # list of Docker images to use as base name for tags
+          images: 'alzamabar/feedbackpal-api' # list of Docker images to use as base name for tags
           tag-sha: true # add git short SHA as Docker tag
       - name: Echo tags
-        run: echo "MyTag -  ${{ steps.docker_meta.outputs.tags }}, My labels - ${{ steps.docker_meta.outputs.labels }}"
+        run: echo "MyTag -  ${{ steps.docker_meta.outputs.tags }}"
       # - name: Push to Docker Hub
       #   id: docker_build
       #   uses: docker/build-push-action@v2
