@@ -41,5 +41,5 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64,linux/386
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.docker_meta.outputs.tags }}, latest
+          tags: 'alzamabar/feedbackpal-api:1.0.0,alzamabar/feedbackpal-api:latest'
           labels: ${{ steps.docker_meta.outputs.labels }}
