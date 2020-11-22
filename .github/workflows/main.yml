@@ -33,13 +33,13 @@ jobs:
           tag-sha: true # add git short SHA as Docker tag
       - name: Echo tags
         run: echo "MyTag -  ${{ steps.docker_meta.outputs.tags }}"
-      # - name: Push to Docker Hub
-      #   id: docker_build
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     context: .
-      #     file: ./Dockerfile
-      #     platforms: linux/amd64,linux/arm64,linux/386
-      #     push: ${{ github.event_name != 'pull_request' }}
-      #     tags: ${{ steps.docker_meta.outputs.tags }}
-      #     labels: ${{ steps.docker_meta.outputs.labels }}
+      - name: Push to Docker Hub
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64,linux/386
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.docker_meta.outputs.tags }}, latest
+          labels: ${{ steps.docker_meta.outputs.labels }}
