@@ -32,3 +32,4 @@ jobs:
           password: ${{ secrets.DH_PASSWORD }}
           repository: alzamabar/feedbackpal-api
           tag_with_ref: true
+          tags: 'alzamabar/feedbackpal-api:1.0.0,alzamabar/feedbackpal-api:latest'
