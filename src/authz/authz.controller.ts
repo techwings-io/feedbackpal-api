@@ -17,8 +17,6 @@ export class AuthzController {
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Permissions('read:feedbackEvents')
   testJwt() {
-    console.log('Received request');
-
     return { message: 'OK' };
   }
 }

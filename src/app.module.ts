@@ -6,6 +6,7 @@ import { join } from 'path';
 import { AuthModule } from './authz/authz.module';
 
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    HealthModule,
   ],
   controllers: [],
   providers: [],
