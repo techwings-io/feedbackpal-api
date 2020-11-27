@@ -6,6 +6,7 @@ import {
   Logger,
   Param,
   Post,
+  Req,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -22,11 +23,16 @@ import { get } from 'http';
 import { PermissionsGuard } from '../permissions/permission.guard';
 
 import { Permissions } from '../permissions/permission.decorator';
+import { Request } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('/feedbackEvents')
 export class FeedbackEventsController {
   private readonly logger = new Logger(FeedbackEventsController.name);
-  constructor(private eventService: FeedbackEventsService) {}
+  constructor(
+    private eventService: FeedbackEventsService,
+    private configService: ConfigService
+  ) {}
 
   @Post()
   @UsePipes(ValidationPipe, FeedbackEventDatesValidationPipe)
@@ -44,8 +50,13 @@ export class FeedbackEventsController {
   @Permissions('read:feedbackEvents')
   getFeedbackEvents(
     @Body()
-    getFeedbackEventsFilterDto: GetFeedbackEventsFilterDto
+    getFeedbackEventsFilterDto: GetFeedbackEventsFilterDto,
+    @Req() request: any
   ): Promise<FeedbackEvent[]> {
+    const { user } = request;
+    const jwtUserKey = `${this.configService.get('JWT_NS_PREFIX')}/email`;
+    console.log('Email', user[jwtUserKey]);
+
     return this.eventService.getFeedbackEvents(getFeedbackEventsFilterDto);
   }
 
