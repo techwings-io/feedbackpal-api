@@ -1,12 +1,12 @@
 import { BaseEntity, Column, Entity, PrimaryColumn, Unique } from 'typeorm';
 
 @Entity()
-@Unique(['name', 'email'])
+@Unique(['eventName', 'email'])
 export class FeedbackEvent extends BaseEntity {
   @PrimaryColumn()
   id: string;
   @Column()
-  name: string;
+  eventName: string;
   @Column()
   description: string;
   @Column()

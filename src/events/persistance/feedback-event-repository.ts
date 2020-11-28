@@ -9,7 +9,7 @@ import * as moment from 'moment';
 export class FeedbackEventRepository extends Repository<FeedbackEvent> {
   async createFeedbackEvent(createEventDto: CreateFeedbackEventDto) {
     const {
-      name,
+      eventName,
       description,
       createdBy,
       email,
@@ -18,7 +18,7 @@ export class FeedbackEventRepository extends Repository<FeedbackEvent> {
     } = createEventDto;
     const event: FeedbackEvent = new FeedbackEvent();
     event.id = uuid();
-    event.name = name;
+    event.eventName = eventName;
     event.description = description;
     event.createdBy = createdBy;
     event.email = email;

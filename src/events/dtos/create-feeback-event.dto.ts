@@ -2,7 +2,7 @@ import { IsDateString, IsEmail, IsNotEmpty } from 'class-validator';
 
 export class CreateFeedbackEventDto {
   @IsNotEmpty()
-  name: string;
+  eventName: string;
   @IsNotEmpty()
   description: string;
   @IsNotEmpty()

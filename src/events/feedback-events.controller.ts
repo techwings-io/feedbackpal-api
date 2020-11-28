@@ -45,6 +45,7 @@ export class FeedbackEventsController {
     @Req() request: any
   ): Promise<FeedbackEvent> {
     const email = this.extractEmailFromRequest(request);
+
     if (email !== createEventDto.email) {
       const errorMessage = 'Unauthorised';
       console.log(errorMessage);
@@ -66,7 +67,6 @@ export class FeedbackEventsController {
   ): Promise<FeedbackEvent[]> {
     const { user } = request;
     const jwtUserKey = `${this.configService.get('JWT_NS_PREFIX')}/email`;
-    console.log('Email', user[jwtUserKey]);
 
     return this.eventService.getFeedbackEvents(getFeedbackEventsFilterDto);
   }
@@ -87,7 +87,8 @@ export class FeedbackEventsController {
 
   private extractEmailFromRequest(request: any): string {
     const { user } = request;
-    const email = `${this.configService.get('JWT_NS_PREFIX')}/email`;
+    const emailPrefix = `${this.configService.get('JWT_NS_PREFIX')}/email`;
+    const email = user[emailPrefix];
     if (!email) {
       const errorMessage =
         'It was not possible to extract the email from the request object';
