@@ -8,12 +8,20 @@ import * as moment from 'moment';
 @EntityRepository(FeedbackEvent)
 export class FeedbackEventRepository extends Repository<FeedbackEvent> {
   async createFeedbackEvent(createEventDto: CreateFeedbackEventDto) {
-    const { name, description, createdBy, validFrom, validTo } = createEventDto;
+    const {
+      name,
+      description,
+      createdBy,
+      email,
+      validFrom,
+      validTo,
+    } = createEventDto;
     const event: FeedbackEvent = new FeedbackEvent();
     event.id = uuid();
     event.name = name;
     event.description = description;
     event.createdBy = createdBy;
+    event.email = email;
     event.validFrom = validFrom;
     event.validTo = validTo;
     event.lastCreated = new Date();

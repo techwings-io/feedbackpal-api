@@ -14,7 +14,6 @@ async function bootstrap() {
   );
 
   const port = process.env.PORT || configService.get('PORT');
-  console.log('Port is', port);
 
   await app.listen(port);
   console.log(`Server listening on port ${port}`);

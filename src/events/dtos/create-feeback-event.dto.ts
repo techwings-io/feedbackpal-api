@@ -1,4 +1,4 @@
-import { IsDateString, IsNotEmpty } from 'class-validator';
+import { IsDateString, IsEmail, IsNotEmpty } from 'class-validator';
 
 export class CreateFeedbackEventDto {
   @IsNotEmpty()
@@ -7,6 +7,9 @@ export class CreateFeedbackEventDto {
   description: string;
   @IsNotEmpty()
   createdBy: string;
+  @IsNotEmpty()
+  @IsEmail()
+  email;
   @IsNotEmpty()
   @IsDateString()
   validFrom: Date;

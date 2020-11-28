@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, PrimaryColumn, Unique } from 'typeorm';
 
 @Entity()
-@Unique(['name'])
+@Unique(['name', 'email'])
 export class FeedbackEvent extends BaseEntity {
   @PrimaryColumn()
   id: string;
@@ -15,6 +15,8 @@ export class FeedbackEvent extends BaseEntity {
   validTo: Date;
   @Column()
   createdBy: string;
+  @Column()
+  email: string;
   @Column()
   lastCreated: Date;
   @Column()
