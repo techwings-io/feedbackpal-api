@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,6 +8,7 @@ import {
   Param,
   Post,
   Req,
+  UnauthorizedException,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -23,7 +25,7 @@ import { get } from 'http';
 import { PermissionsGuard } from '../permissions/permission.guard';
 
 import { Permissions } from '../permissions/permission.decorator';
-import { Request } from 'express';
+import { Request, response } from 'express';
 import { ConfigService } from '@nestjs/config';
 
 @Controller('/feedbackEvents')
@@ -39,8 +41,17 @@ export class FeedbackEventsController {
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Permissions('create:feedbackEvents')
   createEvent(
-    @Body() createEventDto: CreateFeedbackEventDto
+    @Body() createEventDto: CreateFeedbackEventDto,
+    @Req() request: any
   ): Promise<FeedbackEvent> {
+    const email = this.extractEmailFromRequest(request);
+    if (email !== createEventDto.email) {
+      const errorMessage = 'Unauthorised';
+      console.log(errorMessage);
+      throw new UnauthorizedException({
+        errorMessage,
+      });
+    }
     return this.eventService.createEvent(createEventDto);
   }
 
@@ -72,5 +83,19 @@ export class FeedbackEventsController {
   @Permissions('delete:feedbackEvents')
   deleteEvent(@Param('id') id: string): Promise<void> {
     return this.eventService.deleteEvent(id);
+  }
+
+  private extractEmailFromRequest(request: any): string {
+    const { user } = request;
+    const email = `${this.configService.get('JWT_NS_PREFIX')}/email`;
+    if (!email) {
+      const errorMessage =
+        'It was not possible to extract the email from the request object';
+      console.log(errorMessage);
+      throw new BadRequestException({
+        errorMessage,
+      });
+    }
+    return email;
   }
 }

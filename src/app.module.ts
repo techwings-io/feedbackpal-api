@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { FeedbackEventsModule } from './events/feedback-events.module';
 import { join } from 'path';
@@ -7,7 +7,6 @@ import { AuthModule } from './authz/authz.module';
 
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HealthModule } from './health/health.module';
-
 @Module({
   imports: [
     FeedbackEventsModule,
