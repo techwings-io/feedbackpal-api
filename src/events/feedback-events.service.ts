@@ -27,9 +27,9 @@ export class FeedbackEventsService {
     }
   }
 
-  async getEventById(id: string): Promise<FeedbackEvent> {
+  async getEventById(id: string, jwtEmail: string): Promise<FeedbackEvent> {
     const found = await this.eventRepository.findOne(id);
-    if (!found) {
+    if (!found || (found.email !== jwtEmail && !found.publicEvent)) {
       throw new NotFoundException(`Event with id: ${id} not found.`);
     }
     return found;

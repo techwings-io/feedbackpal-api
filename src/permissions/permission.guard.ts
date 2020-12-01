@@ -22,7 +22,9 @@ export class PermissionsGuard implements CanActivate {
       routePermissions.every((routePermission) =>
         userPermissions.includes(routePermission)
       );
-    console.log('hasPermissions', hasPermission());
+    if (!hasPermission()) {
+      console.log('Unauthorised');
+    }
 
     return hasPermission();
   }

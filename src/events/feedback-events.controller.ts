@@ -73,10 +73,13 @@ export class FeedbackEventsController {
   @Get('/:id')
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Permissions('read:feedbackEvents')
-  getEventById(@Param('id') id: string): Promise<FeedbackEvent> {
-    console.log('I have been invoked!!!');
+  getEventById(
+    @Param('id') id: string,
+    @Req() request: any
+  ): Promise<FeedbackEvent> {
+    const email = this.extractEmailFromRequest(request);
 
-    return this.eventService.getEventById(id);
+    return this.eventService.getEventById(id, email);
   }
 
   @Delete('/:id')
