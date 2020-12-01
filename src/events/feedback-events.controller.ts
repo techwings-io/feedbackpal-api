@@ -21,19 +21,21 @@ import { FeedbackEvent } from './persistance/feedback-event.entity';
 import { FeedbackEventDatesValidationPipe } from './pipes/feedback-event-dates-validation.pipe';
 import { GetFeedbackEventsFilterDto } from './dtos/get-feedback-events-filter.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { get } from 'http';
+
 import { PermissionsGuard } from '../permissions/permission.guard';
 
 import { Permissions } from '../permissions/permission.decorator';
-import { Request, response } from 'express';
+
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '../shared/jwt/jwt.service';
 
 @Controller('/feedbackEvents')
 export class FeedbackEventsController {
   private readonly logger = new Logger(FeedbackEventsController.name);
   constructor(
     private eventService: FeedbackEventsService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private jwtService: JwtService
   ) {}
 
   @Post()
@@ -46,13 +48,9 @@ export class FeedbackEventsController {
   ): Promise<FeedbackEvent> {
     const email = this.extractEmailFromRequest(request);
 
-    if (email !== createEventDto.email) {
-      const errorMessage = 'Unauthorised';
-      console.log(errorMessage);
-      throw new UnauthorizedException({
-        errorMessage,
-      });
-    }
+    //Will throw an exception if data not belonging to the user
+    this.jwtService.checkTokenValidity(email, createEventDto.email);
+
     return this.eventService.createEvent(createEventDto);
   }
 
@@ -65,16 +63,19 @@ export class FeedbackEventsController {
     getFeedbackEventsFilterDto: GetFeedbackEventsFilterDto,
     @Req() request: any
   ): Promise<FeedbackEvent[]> {
-    const { user } = request;
-    const jwtUserKey = `${this.configService.get('JWT_NS_PREFIX')}/email`;
-
-    return this.eventService.getFeedbackEvents(getFeedbackEventsFilterDto);
+    const email = this.extractEmailFromRequest(request);
+    return this.eventService.getFeedbackEvents(
+      getFeedbackEventsFilterDto,
+      email
+    );
   }
 
   @Get('/:id')
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Permissions('read:feedbackEvents')
   getEventById(@Param('id') id: string): Promise<FeedbackEvent> {
+    console.log('I have been invoked!!!');
+
     return this.eventService.getEventById(id);
   }
 

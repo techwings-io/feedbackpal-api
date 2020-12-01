@@ -7,6 +7,7 @@ import { AuthModule } from './authz/authz.module';
 
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HealthModule } from './health/health.module';
+import { SharedModule } from './shared/shared.module';
 @Module({
   imports: [
     FeedbackEventsModule,
@@ -32,6 +33,7 @@ import { HealthModule } from './health/health.module';
       isGlobal: true,
     }),
     HealthModule,
+    SharedModule,
   ],
   controllers: [],
   providers: [],

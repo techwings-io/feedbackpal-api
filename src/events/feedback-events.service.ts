@@ -36,8 +36,15 @@ export class FeedbackEventsService {
   }
 
   async getFeedbackEvents(
-    getFeedbackEventsFilterDto: GetFeedbackEventsFilterDto
+    getFeedbackEventsFilterDto: GetFeedbackEventsFilterDto,
+    jwtEmail: string
   ): Promise<FeedbackEvent[]> {
-    return this.eventRepository.getFeedbackEvents(getFeedbackEventsFilterDto);
+    const feedbackEvents = await this.eventRepository.getFeedbackEvents(
+      getFeedbackEventsFilterDto
+    );
+    const filteredEvents = feedbackEvents.filter((feedbackEvent) => {
+      return feedbackEvent.publicEvent || feedbackEvent.email === jwtEmail;
+    });
+    return filteredEvents;
   }
 }

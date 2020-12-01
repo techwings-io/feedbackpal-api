@@ -13,6 +13,7 @@ export class FeedbackEventRepository extends Repository<FeedbackEvent> {
       description,
       createdBy,
       email,
+      publicEvent,
       validFrom,
       validTo,
     } = createEventDto;
@@ -22,6 +23,7 @@ export class FeedbackEventRepository extends Repository<FeedbackEvent> {
     event.description = description;
     event.createdBy = createdBy;
     event.email = email;
+    event.publicEvent = publicEvent;
     event.validFrom = validFrom;
     event.validTo = validTo;
     event.lastCreated = new Date();

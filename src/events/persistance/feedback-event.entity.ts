@@ -1,7 +1,14 @@
-import { BaseEntity, Column, Entity, PrimaryColumn, Unique } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  Index,
+  PrimaryColumn,
+  Unique,
+} from 'typeorm';
 
 @Entity()
-@Unique(['eventName', 'email'])
+@Unique(['eventName'])
 export class FeedbackEvent extends BaseEntity {
   @PrimaryColumn()
   id: string;
@@ -14,9 +21,15 @@ export class FeedbackEvent extends BaseEntity {
   @Column()
   validTo: Date;
   @Column()
+  @Index()
   createdBy: string;
   @Column()
+  @Index()
   email: string;
+  @Column({
+    default: false,
+  })
+  publicEvent: boolean;
   @Column()
   lastCreated: Date;
   @Column()
