@@ -1,22 +1,17 @@
-import { Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { AuthzService } from './authz.service';
-import { PermissionsGuard } from '../permissions/permission.guard';
-import { Permissions } from 'src/permissions/permission.decorator';
+import { Controller, Get } from '@nestjs/common';
+import { subscribeOn, tap } from 'rxjs/operators';
+
+import { JwtService } from '../shared/jwt/jwt.service';
+import { Auth0UserModel } from '../shared/model/auth0.user.model';
+import { AxiosResponse } from 'axios';
 
 @Controller('auth')
 export class AuthzController {
-  constructor(private authService: AuthzService) {}
+  users: Auth0UserModel[] = [];
+  constructor(private jwtService: JwtService) {}
 
-  @Get('/signin')
-  signIn() {
-    this.authService.signIn();
-  }
-
-  @Post('/test/jwt')
-  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  @Permissions('read:feedbackEvents')
-  testJwt() {
-    return { message: 'OK' };
+  @Get('/token')
+  async getAuth0Users(): Promise<Auth0UserModel[]> {
+    return await this.jwtService.getUsers();
   }
 }
