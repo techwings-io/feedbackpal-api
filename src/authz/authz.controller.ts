@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { PermissionsGuard } from 'src/permissions/permission.guard';
 import { Permissions } from '../permissions/permission.decorator';
@@ -14,7 +14,11 @@ export class AuthzController {
   @Get('/auth0-users')
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Permissions('read:feedbackEvents')
-  async getAuth0Users(): Promise<Auth0UserModel[]> {
-    return await this.jwtService.getUsers();
+  async getAuth0Users(
+    @Query('userName') userName: string
+  ): Promise<Auth0UserModel[]> {
+    console.log('userName', userName);
+
+    return await this.jwtService.getUsers(userName);
   }
 }
