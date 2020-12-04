@@ -1,4 +1,11 @@
-import { IsBoolean, IsDateString, IsEmail, IsNotEmpty } from 'class-validator';
+import { Optional } from '@nestjs/common';
+import {
+  IsArray,
+  IsBoolean,
+  IsDateString,
+  IsEmail,
+  IsNotEmpty,
+} from 'class-validator';
 
 export class CreateFeedbackEventDto {
   @IsNotEmpty()
@@ -12,6 +19,9 @@ export class CreateFeedbackEventDto {
   email: string;
   @IsBoolean()
   publicEvent: boolean;
+  @IsArray()
+  @Optional()
+  usersToShareWith: string[];
   @IsNotEmpty()
   @IsDateString()
   validFrom: Date;

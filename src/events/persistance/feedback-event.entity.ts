@@ -30,7 +30,8 @@ export class FeedbackEvent extends BaseEntity {
     default: false,
   })
   publicEvent: boolean;
-  @Column()
+  @Column('varchar', { array: true, nullable: true })
+  usersToShareWith: string[];
   lastCreated: Date;
   @Column()
   lastUpdated: Date;
