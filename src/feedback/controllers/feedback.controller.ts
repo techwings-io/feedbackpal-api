@@ -1,6 +1,8 @@
 import {
+  Body,
   Controller,
   Post,
+  Req,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -10,6 +12,8 @@ import { FeedbackEventDatesValidationPipe } from 'src/events/pipes/feedback-even
 import { PermissionsGuard } from 'src/permissions/permission.guard';
 import { FeedbackService } from '../services/feedback.service';
 import { Permissions } from '../../permissions/permission.decorator';
+import { CreateFeedbackDto } from '../dto/create.feedback.dto';
+import { Request } from 'express';
 
 @Controller('feedback')
 export class FeedbackController {
@@ -19,5 +23,11 @@ export class FeedbackController {
   @UsePipes(ValidationPipe, FeedbackEventDatesValidationPipe)
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Permissions('create:feedbackEvents')
-  storeFeedback() {}
+  async storeFeedback(
+    @Body() feedback: CreateFeedbackDto,
+    @Req() request: any
+  ) {
+    const { user } = request;
+    return await this.feedbackService.storeFeedback(feedback, user);
+  }
 }

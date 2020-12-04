@@ -13,7 +13,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { FeedbackEventsService } from '../feedback-events.service';
+import { FeedbackEventsService } from '../services/feedback-events.service';
 import { CreateFeedbackEventDto } from '../dtos/create-feeback-event.dto';
 
 import { FeedbackEvent } from '../persistence/feedback-event.entity';
@@ -62,14 +62,10 @@ export class FeedbackEventsController {
     getFeedbackEventsFilterDto: GetFeedbackEventsFilterDto,
     @Req() request: any
   ): Promise<FeedbackEvent[]> {
-    const email = this.extractEmailFromRequest(request);
+    const { user } = request;
     let allRetrievedEvents = await this.eventService.getFeedbackEvents(
       getFeedbackEventsFilterDto,
-      email
-    );
-    allRetrievedEvents = this.extractEventsUserIsEntitledToSee(
-      request,
-      allRetrievedEvents
+      user
     );
     return allRetrievedEvents;
   }
@@ -77,13 +73,13 @@ export class FeedbackEventsController {
   @Get('/:id')
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Permissions('read:feedbackEvents')
-  getEventById(
+  getUserEventById(
     @Param('id') id: string,
     @Req() request: any
   ): Promise<FeedbackEvent> {
     const email = this.extractEmailFromRequest(request);
 
-    return this.eventService.getEventById(id, email);
+    return this.eventService.getUserEventById(id, email);
   }
 
   @Delete('/:id')
@@ -107,27 +103,5 @@ export class FeedbackEventsController {
       });
     }
     return email;
-  }
-
-  private extractEventsUserIsEntitledToSee(
-    request: any,
-    events: FeedbackEvent[]
-  ) {
-    const { user } = request;
-
-    return events.filter((event) => {
-      // console.log('event.createdBy === user.sub', event.createdBy === user.sub);
-      // console.log('publicEvent', event.publicEvent);
-      // console.log(
-      //   'event.usersToShareWith.includes(user.sub)',
-      //   event.usersToShareWith.includes(user.sub)
-      // );
-
-      return (
-        event.createdBy === user.sub ||
-        event.publicEvent ||
-        event.usersToShareWith.includes(user.sub)
-      );
-    });
   }
 }

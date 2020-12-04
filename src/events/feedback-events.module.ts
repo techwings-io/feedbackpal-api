@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FeedbackEventsController } from './controllers/feedback-events.controller';
-import { FeedbackEventsService } from './feedback-events.service';
+import { FeedbackEventsService } from './services/feedback-events.service';
 
 import { FeedbackEventRepository } from './persistence/feedback-event-repository';
 import { SharedModule } from '../shared/shared.module';
@@ -10,5 +10,6 @@ import { SharedModule } from '../shared/shared.module';
   imports: [TypeOrmModule.forFeature([FeedbackEventRepository]), SharedModule],
   controllers: [FeedbackEventsController],
   providers: [FeedbackEventsService],
+  exports: [FeedbackEventsService],
 })
 export class FeedbackEventsModule {}
