@@ -17,8 +17,6 @@ export class AuthzController {
   async getAuth0Users(
     @Query('userName') userName: string
   ): Promise<Auth0UserModel[]> {
-    console.log('userName', userName);
-
     return await this.jwtService.getUsers(userName);
   }
 }
