@@ -57,6 +57,7 @@ export class JwtService {
       params: {
         fields: 'name,email,picture,user_id',
         search_engine: 'v3',
+        per_page: '5',
       },
       headers: { Authorization: `Bearer ${response.data.access_token}` },
     };
@@ -74,7 +75,9 @@ export class JwtService {
       )
       .toPromise();
 
-    this.users = await usersPromise.data;
+    this.users = await usersPromise.data.filter((user, i, arr) => {
+      return arr.findIndex((t) => t.name === user.name) === i;
+    });
     return this.users;
   }
 
