@@ -3,8 +3,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateFeedbackEventDto } from './dtos/create-feeback-event.dto';
 import * as moment from 'moment';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FeedbackEventRepository } from './persistance/feedback-event-repository';
-import { FeedbackEvent } from './persistance/feedback-event.entity';
+import { FeedbackEventRepository } from './persistence/feedback-event-repository';
+import { FeedbackEvent } from './persistence/feedback-event.entity';
 import { GetFeedbackEventsFilterDto } from './dtos/get-feedback-events-filter.dto';
 
 @Injectable()

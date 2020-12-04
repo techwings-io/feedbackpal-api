@@ -13,20 +13,20 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { FeedbackEventsService } from './feedback-events.service';
-import { CreateFeedbackEventDto } from './dtos/create-feeback-event.dto';
+import { FeedbackEventsService } from '../feedback-events.service';
+import { CreateFeedbackEventDto } from '../dtos/create-feeback-event.dto';
 
-import { FeedbackEvent } from './persistance/feedback-event.entity';
-import { FeedbackEventDatesValidationPipe } from './pipes/feedback-event-dates-validation.pipe';
-import { GetFeedbackEventsFilterDto } from './dtos/get-feedback-events-filter.dto';
+import { FeedbackEvent } from '../persistence/feedback-event.entity';
+import { FeedbackEventDatesValidationPipe } from '../pipes/feedback-event-dates-validation.pipe';
+import { GetFeedbackEventsFilterDto } from '../dtos/get-feedback-events-filter.dto';
 import { AuthGuard } from '@nestjs/passport';
 
-import { PermissionsGuard } from '../permissions/permission.guard';
+import { PermissionsGuard } from '../../permissions/permission.guard';
 
-import { Permissions } from '../permissions/permission.decorator';
+import { Permissions } from '../../permissions/permission.decorator';
 
 import { ConfigService } from '@nestjs/config';
-import { JwtService } from '../shared/jwt/jwt.service';
+import { JwtService } from '../../shared/jwt/jwt.service';
 
 @Controller('/feedbackEvents')
 export class FeedbackEventsController {
@@ -114,15 +114,14 @@ export class FeedbackEventsController {
     events: FeedbackEvent[]
   ) {
     const { user } = request;
-    console.log('user sub', user.sub);
 
     return events.filter((event) => {
-      console.log('event.createdBy === user.sub', event.createdBy === user.sub);
-      console.log('publicEvent', event.publicEvent);
-      console.log(
-        'event.usersToShareWith.includes(user.sub)',
-        event.usersToShareWith.includes(user.sub)
-      );
+      // console.log('event.createdBy === user.sub', event.createdBy === user.sub);
+      // console.log('publicEvent', event.publicEvent);
+      // console.log(
+      //   'event.usersToShareWith.includes(user.sub)',
+      //   event.usersToShareWith.includes(user.sub)
+      // );
 
       return (
         event.createdBy === user.sub ||

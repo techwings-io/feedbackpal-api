@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { FeedbackEventsController } from './feedback-events.controller';
+import { FeedbackEventsController } from './controllers/feedback-events.controller';
 import { FeedbackEventsService } from './feedback-events.service';
-import { FeedbackEventRepository } from './persistance/feedback-event-repository';
+
+import { FeedbackEventRepository } from './persistence/feedback-event-repository';
 import { SharedModule } from '../shared/shared.module';
 
 @Module({
