@@ -57,16 +57,21 @@ export class FeedbackEventsController {
   @UsePipes(ValidationPipe, FeedbackEventDatesValidationPipe)
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Permissions('read:feedbackEvents')
-  getFeedbackEvents(
+  async getFeedbackEvents(
     @Body()
     getFeedbackEventsFilterDto: GetFeedbackEventsFilterDto,
     @Req() request: any
   ): Promise<FeedbackEvent[]> {
     const email = this.extractEmailFromRequest(request);
-    return this.eventService.getFeedbackEvents(
+    let allRetrievedEvents = await this.eventService.getFeedbackEvents(
       getFeedbackEventsFilterDto,
       email
     );
+    allRetrievedEvents = this.extractEventsUserIsEntitledToSee(
+      request,
+      allRetrievedEvents
+    );
+    return allRetrievedEvents;
   }
 
   @Get('/:id')
@@ -90,6 +95,7 @@ export class FeedbackEventsController {
 
   private extractEmailFromRequest(request: any): string {
     const { user } = request;
+
     const emailPrefix = `${this.configService.get('JWT_NS_PREFIX')}/email`;
     const email = user[emailPrefix];
     if (!email) {
@@ -101,5 +107,28 @@ export class FeedbackEventsController {
       });
     }
     return email;
+  }
+
+  private extractEventsUserIsEntitledToSee(
+    request: any,
+    events: FeedbackEvent[]
+  ) {
+    const { user } = request;
+    console.log('user sub', user.sub);
+
+    return events.filter((event) => {
+      console.log('event.createdBy === user.sub', event.createdBy === user.sub);
+      console.log('publicEvent', event.publicEvent);
+      console.log(
+        'event.usersToShareWith.includes(user.sub)',
+        event.usersToShareWith.includes(user.sub)
+      );
+
+      return (
+        event.createdBy === user.sub ||
+        event.publicEvent ||
+        event.usersToShareWith.includes(user.sub)
+      );
+    });
   }
 }
