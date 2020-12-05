@@ -56,9 +56,18 @@ export class FeedbackEventsService {
     feedbackEvent: FeedbackEvent,
     user: any
   ): boolean {
-    let allowed = false;
+    console.log('feedbackEvent.publicEvent', feedbackEvent.publicEvent);
+    console.log(
+      'feedbackEvent.createdBy === user.sub',
+      feedbackEvent.createdBy === user.sub
+    );
+    console.log(
+      'feedbackEvent.usersToShareWith.includes(user.sub)',
+      feedbackEvent.usersToShareWith.includes(user.sub)
+    );
+
     if (feedbackEvent.publicEvent) {
-      return (allowed = true);
+      return true;
     }
     // Private event. Has it been shared with the requesting user?
     return (

@@ -63,6 +63,7 @@ export class FeedbackEventsController {
     @Req() request: any
   ): Promise<FeedbackEvent[]> {
     const { user } = request;
+
     let allRetrievedEvents = await this.eventService.getFeedbackEvents(
       getFeedbackEventsFilterDto,
       user
@@ -77,9 +78,9 @@ export class FeedbackEventsController {
     @Param('id') id: string,
     @Req() request: any
   ): Promise<FeedbackEvent> {
-    const email = this.extractEmailFromRequest(request);
+    const { user } = request;
 
-    return this.eventService.getUserEventById(id, email);
+    return this.eventService.getUserEventById(id, user);
   }
 
   @Delete('/:id')
