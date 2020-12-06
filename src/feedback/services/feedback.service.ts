@@ -20,8 +20,6 @@ export class FeedbackService {
     createFeedbackDto: CreateFeedbackDto,
     user: any
   ): Promise<Feedback> {
-    console.log('storing feedback');
-
     const { eventId } = createFeedbackDto;
     // Entitlements are managed by the service
     const event = await this.feedbackEventService.getUserEventById(
