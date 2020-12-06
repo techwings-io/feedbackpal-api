@@ -35,4 +35,10 @@ export class FeedbackEvent extends BaseEntity {
   lastCreated: Date;
   @Column()
   lastUpdated: Date;
+  @Column({ default: 0 })
+  totalHappy: number;
+  @Column({ default: 0 })
+  totalNeutral: number;
+  @Column({ default: 0 })
+  totalUnhappy: number;
 }

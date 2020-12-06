@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FeedbackEventRepository } from '../persistence/feedback-event-repository';
 import { FeedbackEvent } from '../persistence/feedback-event.entity';
 import { GetFeedbackEventsFilterDto } from '../dtos/get-feedback-events-filter.dto';
+import { Feeling } from 'src/shared/model/feeling.enum';
 
 @Injectable()
 export class FeedbackEventsService {
@@ -51,6 +52,28 @@ export class FeedbackEventsService {
     });
     return filteredEvents;
   }
+
+  async updateFeedbackEventCounter(
+    eventId: string,
+    feeling: Feeling
+  ): Promise<void> {
+    const event = await this.eventRepository.findOneOrFail(eventId);
+    switch (feeling) {
+      case Feeling.HAPPY:
+        event.totalHappy += 1;
+        break;
+
+      case Feeling.NEUTRAL:
+        event.totalNeutral += 1;
+        break;
+      case Feeling.ANGRY:
+        event.totalUnhappy += 1;
+        break;
+    }
+    this.eventRepository.save(event);
+  }
+
+  //-----> Private stuff
 
   private isUserAllowedToSeeThisEvent(
     feedbackEvent: FeedbackEvent,

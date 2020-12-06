@@ -6,6 +6,7 @@ import { CreateFeedbackDto } from '../dto/create.feedback.dto';
 import { Feedback } from '../persistence/feedback.entity';
 import { FeedbackEventsService } from '../../events/services/feedback-events.service';
 import { v4 as uuid } from 'uuid';
+import { Feeling } from 'src/shared/model/feeling.enum';
 
 @Injectable()
 export class FeedbackService {
@@ -30,6 +31,7 @@ export class FeedbackService {
     if (!event) {
       throw new BadRequestException('Could not find event with id: ', eventId);
     }
+
     const feedback = new Feedback();
     feedback.id = uuid();
     feedback.comments = createFeedbackDto.comments;
@@ -38,6 +40,18 @@ export class FeedbackService {
     feedback.feeling = createFeedbackDto.feeling;
     feedback.lastCreated = createFeedbackDto.lastCreated;
     // Authorised
-    return await this.feedbackRepository.createFeedbackEntry(feedback);
+    const retValue = await this.feedbackRepository.createFeedbackEntry(
+      feedback
+    );
+    // Updates the counter
+    await this.feedbackEventService
+      .updateFeedbackEventCounter(eventId, feedback.feeling)
+      .then(() => {
+        console.log('Totals saved successfully');
+      })
+      .catch((err) =>
+        console.log('An error occurred while saving totals', err)
+      );
+    return retValue;
   }
 }
