@@ -30,6 +30,9 @@ export class FeedbackEventRepository extends Repository<FeedbackEvent> {
     event.validTo = validTo;
     event.lastCreated = new Date();
     event.lastUpdated = new Date();
+    event.totalHappy = 0;
+    event.totalNeutral = 0;
+    event.totalUnhappy = 0;
 
     return await event.save();
   }

@@ -56,7 +56,7 @@ export class FeedbackEventsService {
   async updateFeedbackEventCounter(
     eventId: string,
     feeling: Feeling
-  ): Promise<void> {
+  ): Promise<FeedbackEvent> {
     const event = await this.eventRepository.findOneOrFail(eventId);
     switch (feeling) {
       case Feeling.HAPPY:
@@ -70,7 +70,7 @@ export class FeedbackEventsService {
         event.totalUnhappy += 1;
         break;
     }
-    this.eventRepository.save(event);
+    return await this.eventRepository.save(event);
   }
 
   //-----> Private stuff

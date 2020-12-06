@@ -1,3 +1,4 @@
+import { Optional } from '@nestjs/common';
 import {
   BaseEntity,
   Column,
@@ -35,10 +36,10 @@ export class FeedbackEvent extends BaseEntity {
   lastCreated: Date;
   @Column()
   lastUpdated: Date;
-  @Column({ default: 0 })
+  @Column()
   totalHappy: number;
-  @Column({ default: 0 })
+  @Column()
   totalNeutral: number;
-  @Column({ default: 0 })
+  @Column()
   totalUnhappy: number;
 }
