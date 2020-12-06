@@ -6,7 +6,7 @@ import { CreateFeedbackDto } from '../dto/create.feedback.dto';
 
 @EntityRepository(Feedback)
 export class FeedbackRepository extends Repository<Feedback> {
-  async createFeedbackEntry(feedback: Feedback) {
+  async createFeedbackEntry(feedback: Feedback): Promise<Feedback> {
     return await this.save(feedback);
   }
 }
