@@ -21,7 +21,7 @@ import { FeedbackModule } from './feedback/feedback.module';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
+        synchronize: false,
         ssl: {
           rejectUnauthorized: false,
         },
