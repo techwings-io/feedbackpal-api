@@ -6,21 +6,7 @@ import { CreateFeedbackDto } from '../dto/create.feedback.dto';
 
 @EntityRepository(Feedback)
 export class FeedbackRepository extends Repository<Feedback> {
-  async createFeedbackEntry(createFeedbackDto: CreateFeedbackDto) {
-    const {
-      eventId,
-      createdBy,
-      lastCreated,
-      comments,
-      feeling,
-    } = createFeedbackDto;
-    const feedback: Feedback = new Feedback();
-    feedback.eventId = eventId;
-    feedback.createdBy = createdBy;
-    feedback.lastCreated = lastCreated;
-    feedback.comments = comments;
-    feedback.feeling = feeling;
-
+  async createFeedbackEntry(feedback: Feedback) {
     return await this.save(feedback);
   }
 }
