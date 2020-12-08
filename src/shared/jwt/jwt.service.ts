@@ -81,6 +81,31 @@ export class JwtService {
     return this.users;
   }
 
+  async getUser(userId: string): Promise<Auth0UserModel> {
+    const response: any = await this.getAuth0AdminApiToken();
+
+    const config: AxiosRequestConfig = {
+      params: {
+        fields: 'name,email,picture,user_id',
+        search_engine: 'v3',
+        per_page: '1',
+      },
+      headers: { Authorization: `Bearer ${response.data.access_token}` },
+    };
+
+    const usersPromise = await this.httpService
+      .get<Auth0UserModel>(`${this.auth0AdminUserUrl}/${userId}`, config)
+      .pipe(
+        catchError((err) => {
+          console.log('Error while invoking the user url', err);
+          return throwError('Error while invoking the user url');
+        })
+      )
+      .toPromise();
+
+    return await usersPromise.data;
+  }
+
   retrieveUsers() {
     return this.users;
   }

@@ -12,6 +12,7 @@ import { FeedbackEvent } from '../persistence/feedback-event.entity';
 import { GetFeedbackEventsFilterDto } from '../dtos/get-feedback-events-filter.dto';
 import { Feeling } from 'src/shared/model/feeling.enum';
 import { PaginatedResultsDto } from '../../shared/pagination/paginated-results-dto';
+import { EventSubscriber } from 'typeorm';
 
 @Injectable()
 export class FeedbackEventsService {
@@ -60,6 +61,8 @@ export class FeedbackEventsService {
     feeling: Feeling
   ): Promise<FeedbackEvent> {
     const event = await this.eventRepository.findOneOrFail(eventId);
+    event.totalFeedbacks += 1;
+
     switch (feeling) {
       case Feeling.HAPPY:
         event.totalHappy += 1;
@@ -72,7 +75,8 @@ export class FeedbackEventsService {
         event.totalUnhappy += 1;
         break;
     }
-    return await this.eventRepository.save(event);
+    const returnValue = await this.eventRepository.save(event);
+    return returnValue;
   }
 
   //-----> Private stuff

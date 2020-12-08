@@ -35,6 +35,7 @@ export class FeedbackEventRepository extends Repository<FeedbackEvent> {
     event.totalHappy = 0;
     event.totalNeutral = 0;
     event.totalUnhappy = 0;
+    event.totalFeedbacks = 0;
 
     return await event.save();
   }

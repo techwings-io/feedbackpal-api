@@ -42,4 +42,6 @@ export class FeedbackEvent extends BaseEntity {
   totalNeutral: number;
   @Column('int')
   totalUnhappy: number;
+  @Column('int')
+  totalFeedbacks: number;
 }

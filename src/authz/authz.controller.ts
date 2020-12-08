@@ -19,4 +19,14 @@ export class AuthzController {
   ): Promise<Auth0UserModel[]> {
     return await this.jwtService.getUsers(userName);
   }
+  @Get('/auth0-user')
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  @Permissions('read:feedbackEvents')
+  async getAuth0User(@Query('userId') userId: string): Promise<Auth0UserModel> {
+    console.log('param userId', userId);
+
+    const user = await this.jwtService.getUser(userId);
+    console.log('user', user);
+    return user;
+  }
 }
