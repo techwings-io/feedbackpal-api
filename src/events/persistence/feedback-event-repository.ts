@@ -5,6 +5,8 @@ import { CreateFeedbackEventDto } from '../dtos/create-feeback-event.dto';
 import { GetFeedbackEventsFilterDto } from '../dtos/get-feedback-events-filter.dto';
 import * as moment from 'moment';
 
+import { PaginatedResultsDto } from '../../shared/pagination/paginated-results-dto';
+
 @EntityRepository(FeedbackEvent)
 export class FeedbackEventRepository extends Repository<FeedbackEvent> {
   async createFeedbackEvent(createEventDto: CreateFeedbackEventDto) {
@@ -39,14 +41,28 @@ export class FeedbackEventRepository extends Repository<FeedbackEvent> {
 
   async getFeedbackEvents(
     getFeedbackEventsFilterDto: GetFeedbackEventsFilterDto
-  ): Promise<FeedbackEvent[]> {
+  ): Promise<PaginatedResultsDto<FeedbackEvent>> {
+    if (isNaN(getFeedbackEventsFilterDto.page)) {
+      getFeedbackEventsFilterDto.page = 0;
+    }
+    if (isNaN(getFeedbackEventsFilterDto.limit)) {
+      getFeedbackEventsFilterDto.limit = 10;
+    }
+    const skippedItems: number =
+      (getFeedbackEventsFilterDto.page - 1) * getFeedbackEventsFilterDto.limit;
+    const totalCount = await this.count();
     const {
       validFrom,
       validTo,
       eventName,
       active,
+      page,
+      limit,
     } = getFeedbackEventsFilterDto;
-    const query = this.createQueryBuilder('feedback_event');
+    const query = this.createQueryBuilder('feedback_event')
+      .limit(limit)
+      .offset(skippedItems);
+
     if (eventName) {
       query.andWhere(
         'feedback_event.name like :eventName or feedback_event.description like :eventName',
@@ -69,6 +85,11 @@ export class FeedbackEventRepository extends Repository<FeedbackEvent> {
     }
 
     const feedbackEvents = await query.getMany();
-    return feedbackEvents;
+    const paginatedResults: PaginatedResultsDto<FeedbackEvent> = new PaginatedResultsDto();
+    paginatedResults.data = feedbackEvents;
+    paginatedResults.page = page;
+    paginatedResults.totalCount = totalCount;
+    paginatedResults.limit = +limit;
+    return paginatedResults;
   }
 }

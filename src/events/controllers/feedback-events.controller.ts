@@ -7,6 +7,7 @@ import {
   Logger,
   Param,
   Post,
+  Query,
   Req,
   UseGuards,
   UsePipes,
@@ -27,6 +28,7 @@ import { Permissions } from '../../permissions/permission.decorator';
 
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '../../shared/jwt/jwt.service';
+import { PaginatedResultsDto } from 'src/shared/pagination/paginated-results-dto';
 
 @Controller('/feedbackEvents')
 export class FeedbackEventsController {
@@ -36,6 +38,37 @@ export class FeedbackEventsController {
     private configService: ConfigService,
     private jwtService: JwtService
   ) {}
+
+  @Get()
+  @UsePipes(ValidationPipe, FeedbackEventDatesValidationPipe)
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  @Permissions('read:feedbackEvents')
+  async getFeedbackEvents(
+    @Query()
+    params,
+    @Req() request: any
+  ): Promise<PaginatedResultsDto<FeedbackEvent>> {
+    console.log('params', params);
+
+    const { user } = request;
+    const getFeedbackEventsFilterDto = params;
+    console.log('getFeedbackEventsFilterDto', params);
+
+    if (getFeedbackEventsFilterDto) {
+      // Transforms values to numbers
+      getFeedbackEventsFilterDto.page = +getFeedbackEventsFilterDto.page;
+      getFeedbackEventsFilterDto.limit =
+        +getFeedbackEventsFilterDto.limit > 50
+          ? 50
+          : getFeedbackEventsFilterDto.limit;
+    }
+
+    let allRetrievedEvents = await this.eventService.getFeedbackEvents(
+      getFeedbackEventsFilterDto,
+      user
+    );
+    return allRetrievedEvents;
+  }
 
   @Post()
   @UsePipes(ValidationPipe, FeedbackEventDatesValidationPipe)
@@ -51,24 +84,6 @@ export class FeedbackEventsController {
     this.jwtService.checkTokenValidity(email, createEventDto.email);
 
     return this.eventService.createEvent(createEventDto);
-  }
-
-  @Get()
-  @UsePipes(ValidationPipe, FeedbackEventDatesValidationPipe)
-  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  @Permissions('read:feedbackEvents')
-  async getFeedbackEvents(
-    @Body()
-    getFeedbackEventsFilterDto: GetFeedbackEventsFilterDto,
-    @Req() request: any
-  ): Promise<FeedbackEvent[]> {
-    const { user } = request;
-
-    let allRetrievedEvents = await this.eventService.getFeedbackEvents(
-      getFeedbackEventsFilterDto,
-      user
-    );
-    return allRetrievedEvents;
   }
 
   @Get('/:id')

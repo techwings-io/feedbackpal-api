@@ -11,6 +11,7 @@ import { FeedbackEventRepository } from '../persistence/feedback-event-repositor
 import { FeedbackEvent } from '../persistence/feedback-event.entity';
 import { GetFeedbackEventsFilterDto } from '../dtos/get-feedback-events-filter.dto';
 import { Feeling } from 'src/shared/model/feeling.enum';
+import { PaginatedResultsDto } from '../../shared/pagination/paginated-results-dto';
 
 @Injectable()
 export class FeedbackEventsService {
@@ -43,14 +44,15 @@ export class FeedbackEventsService {
   async getFeedbackEvents(
     getFeedbackEventsFilterDto: GetFeedbackEventsFilterDto,
     user: any
-  ): Promise<FeedbackEvent[]> {
-    const feedbackEvents = await this.eventRepository.getFeedbackEvents(
+  ): Promise<PaginatedResultsDto<FeedbackEvent>> {
+    const paginatedResults = await this.eventRepository.getFeedbackEvents(
       getFeedbackEventsFilterDto
     );
-    const filteredEvents = feedbackEvents.filter((feedbackEvent) => {
+    const filteredEvents = paginatedResults.data.filter((feedbackEvent) => {
       return this.isUserAllowedToSeeThisEvent(feedbackEvent, user);
     });
-    return filteredEvents;
+    paginatedResults.data = filteredEvents;
+    return paginatedResults;
   }
 
   async updateFeedbackEventCounter(

@@ -1,6 +1,7 @@
 import { IsDateString, IsOptional } from 'class-validator';
+import { PaginationDto } from '../../shared/pagination/pagination-dto';
 
-export class GetFeedbackEventsFilterDto {
+export class GetFeedbackEventsFilterDto extends PaginationDto {
   @IsOptional()
   @IsDateString()
   validFrom: Date;
