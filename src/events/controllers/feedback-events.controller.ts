@@ -52,7 +52,6 @@ export class FeedbackEventsController {
 
     const { user } = request;
     const getFeedbackEventsFilterDto = params;
-    console.log('getFeedbackEventsFilterDto', params);
 
     if (getFeedbackEventsFilterDto) {
       // Transforms values to numbers
