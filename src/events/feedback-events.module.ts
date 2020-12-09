@@ -5,9 +5,13 @@ import { FeedbackEventsService } from './services/feedback-events.service';
 
 import { FeedbackEventRepository } from './persistence/feedback-event-repository';
 import { SharedModule } from '../shared/shared.module';
+import { FeedbackRepository } from 'src/feedback/persistence/feedback.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([FeedbackEventRepository]), SharedModule],
+  imports: [
+    TypeOrmModule.forFeature([FeedbackEventRepository, FeedbackRepository]),
+    SharedModule,
+  ],
   controllers: [FeedbackEventsController],
   providers: [FeedbackEventsService],
   exports: [FeedbackEventsService],

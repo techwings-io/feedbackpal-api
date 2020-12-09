@@ -78,6 +78,8 @@ export class FeedbackEventsController {
     @Body() createEventDto: CreateFeedbackEventDto,
     @Req() request: any
   ): Promise<FeedbackEvent> {
+    console.log('Got request to create feedback event');
+
     const email = this.extractEmailFromRequest(request);
 
     //Will throw an exception if data not belonging to the user

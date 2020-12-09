@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, Repository, EventSubscriber } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { FeedbackEvent } from './feedback-event.entity';
 import { CreateFeedbackEventDto } from '../dtos/create-feeback-event.dto';
@@ -6,9 +6,13 @@ import { GetFeedbackEventsFilterDto } from '../dtos/get-feedback-events-filter.d
 import * as moment from 'moment';
 
 import { PaginatedResultsDto } from '../../shared/pagination/paginated-results-dto';
+import { FeedbackService } from '../../feedback/services/feedback.service';
 
 @EntityRepository(FeedbackEvent)
 export class FeedbackEventRepository extends Repository<FeedbackEvent> {
+  constructor() {
+    super();
+  }
   async createFeedbackEvent(createEventDto: CreateFeedbackEventDto) {
     const {
       eventName,

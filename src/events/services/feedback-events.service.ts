@@ -13,12 +13,15 @@ import { GetFeedbackEventsFilterDto } from '../dtos/get-feedback-events-filter.d
 import { Feeling } from 'src/shared/model/feeling.enum';
 import { PaginatedResultsDto } from '../../shared/pagination/paginated-results-dto';
 import { EventSubscriber } from 'typeorm';
+import { FeedbackRepository } from 'src/feedback/persistence/feedback.repository';
 
 @Injectable()
 export class FeedbackEventsService {
   constructor(
     @InjectRepository(FeedbackEventRepository)
-    private eventRepository: FeedbackEventRepository
+    private eventRepository: FeedbackEventRepository,
+    @InjectRepository(FeedbackRepository)
+    private feedbackRepository: FeedbackRepository
   ) {}
 
   async createEvent(
@@ -27,11 +30,15 @@ export class FeedbackEventsService {
     return this.eventRepository.createFeedbackEvent(createEventDto);
   }
 
-  async deleteEvent(id: string): Promise<void> {
-    const results = await this.eventRepository.delete(id);
+  async deleteEvent(eventId: string): Promise<void> {
+    await this.feedbackRepository.deleteAllFeedbacksForEvent(eventId);
+    const results = await this.eventRepository.delete(eventId);
     if (results.affected === 0) {
-      throw new NotFoundException(`Event with id: ${id} not found.`);
+      throw new NotFoundException(`Event with id: ${eventId} not found.`);
     }
+    console.log(
+      `Event id ${eventId} and all associated feedback has been deleted`
+    );
   }
 
   async getUserEventById(id: string, user: any): Promise<FeedbackEvent> {

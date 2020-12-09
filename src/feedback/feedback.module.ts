@@ -15,5 +15,6 @@ import { FeedbackEventsModule } from '../events/feedback-events.module';
   ],
   controllers: [FeedbackController],
   providers: [FeedbackService],
+  exports: [FeedbackService],
 })
 export class FeedbackModule {}
