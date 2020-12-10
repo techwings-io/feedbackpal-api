@@ -15,6 +15,7 @@ export class FeedbackEventRepository extends Repository<FeedbackEvent> {
   }
   async createFeedbackEvent(createEventDto: CreateFeedbackEventDto) {
     const {
+      id,
       eventName,
       description,
       createdBy,
@@ -25,7 +26,7 @@ export class FeedbackEventRepository extends Repository<FeedbackEvent> {
       validTo,
     } = createEventDto;
     const event: FeedbackEvent = new FeedbackEvent();
-    event.id = uuid();
+    event.id = id ? id : uuid();
     event.eventName = eventName;
     event.description = description;
     event.createdBy = createdBy;

@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HealthModule } from './health/health.module';
 import { SharedModule } from './shared/shared.module';
 import { FeedbackModule } from './feedback/feedback.module';
+import { MyfeedbackpalModule } from './myfeedbackpal/myfeedbackpal.module';
 @Module({
   imports: [
     FeedbackEventsModule,
@@ -35,6 +36,7 @@ import { FeedbackModule } from './feedback/feedback.module';
     HealthModule,
     SharedModule,
     FeedbackModule,
+    MyfeedbackpalModule,
   ],
   controllers: [],
   providers: [],

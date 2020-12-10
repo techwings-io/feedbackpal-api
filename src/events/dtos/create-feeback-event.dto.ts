@@ -5,9 +5,13 @@ import {
   IsDateString,
   IsEmail,
   IsNotEmpty,
+  IsString,
 } from 'class-validator';
 
 export class CreateFeedbackEventDto {
+  @Optional()
+  @IsString()
+  id: string;
   @IsNotEmpty()
   eventName: string;
   @IsNotEmpty()
