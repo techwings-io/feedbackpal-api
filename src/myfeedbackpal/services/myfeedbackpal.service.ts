@@ -48,8 +48,6 @@ export class MyfeedbackpalService {
 
       let eventData: FeedbackEvent;
       if (cachedEvents.has(feedback.eventId)) {
-        console.log('Hitting cache');
-
         eventData = cachedEvents.get(feedback.eventId);
       } else {
         eventData = await this.feedbackEventRepository.findOneOrFail(
@@ -85,6 +83,9 @@ export class MyfeedbackpalService {
     }
 
     results.data = feedbackData;
+    results.page = paginationDto.page;
+    results.totalCount = totalCount;
+    results.limit = +paginationDto.limit;
     return results;
   }
 }
