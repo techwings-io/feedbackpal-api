@@ -22,7 +22,7 @@
     "heroku-prebuild": "npm install -g @nestjs/cli"
   },
   "engines": {
-    "node": "14.14.0",
+    "node": "12.x",
     "npm": "7.0.13"
   },
   "dependencies": {
