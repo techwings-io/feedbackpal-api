@@ -9,6 +9,7 @@ import {
   Post,
   Query,
   Req,
+  UnauthorizedException,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -114,9 +115,9 @@ export class FeedbackEventsController {
     const email = user[emailPrefix];
     if (!email) {
       const errorMessage =
-        'It was not possible to extract the email from the request object';
+        'It was not possible to extract the email from the request object. Request not authorised';
       console.log(errorMessage);
-      throw new BadRequestException({
+      throw new UnauthorizedException({
         errorMessage,
       });
     }
