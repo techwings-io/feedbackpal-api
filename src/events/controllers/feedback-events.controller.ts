@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   Logger,
+  NotFoundException,
   Param,
   Post,
   Query,
@@ -35,7 +36,7 @@ import { PaginatedResultsDto } from 'src/shared/pagination/paginated-results-dto
 export class FeedbackEventsController {
   private readonly logger = new Logger(FeedbackEventsController.name);
   constructor(
-    private eventService: FeedbackEventsService,
+    private feedbackEventService: FeedbackEventsService,
     private configService: ConfigService,
     private jwtService: JwtService
   ) {}
@@ -63,7 +64,7 @@ export class FeedbackEventsController {
           : getFeedbackEventsFilterDto.limit;
     }
 
-    let allRetrievedEvents = await this.eventService.getFeedbackEvents(
+    let allRetrievedEvents = await this.feedbackEventService.getFeedbackEvents(
       getFeedbackEventsFilterDto,
       user
     );
@@ -85,7 +86,7 @@ export class FeedbackEventsController {
     //Will throw an exception if data not belonging to the user
     this.jwtService.checkTokenValidity(email, createEventDto.email);
 
-    return this.eventService.createEvent(createEventDto);
+    return this.feedbackEventService.createEvent(createEventDto);
   }
 
   @Get('/:id')
@@ -97,14 +98,28 @@ export class FeedbackEventsController {
   ): Promise<FeedbackEvent> {
     const { user } = request;
 
-    return this.eventService.getUserEventById(id, user);
+    return this.feedbackEventService.getUserEventById(id, user);
   }
 
   @Delete('/:id')
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Permissions('delete:feedbackEvents')
-  deleteEvent(@Param('id') id: string): Promise<void> {
-    return this.eventService.deleteEvent(id);
+  async deleteEvent(
+    @Param('id') id: string,
+    @Req() request: any
+  ): Promise<void> {
+    const { user } = request;
+    const event: FeedbackEvent = await this.feedbackEventService.getUserEventById(
+      id,
+      user
+    );
+    if (!event) {
+      throw new NotFoundException(`Event with id: ${id} not found`);
+    }
+    if (user.sub !== event.createdBy) {
+      throw new UnauthorizedException('User unathorised to delete event');
+    }
+    return await this.feedbackEventService.deleteEvent(id);
   }
 
   private extractEmailFromRequest(request: any): string {
