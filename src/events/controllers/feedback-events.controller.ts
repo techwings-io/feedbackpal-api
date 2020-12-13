@@ -108,8 +108,10 @@ export class FeedbackEventsController {
 
   private extractEmailFromRequest(request: any): string {
     const { user } = request;
+    console.log('user', user);
 
     const emailPrefix = `${this.configService.get('JWT_NS_PREFIX')}/email`;
+
     const email = user[emailPrefix];
     if (!email) {
       const errorMessage =
