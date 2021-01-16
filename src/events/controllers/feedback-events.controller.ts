@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -21,7 +20,7 @@ import { CreateFeedbackEventDto } from '../dtos/create-feeback-event.dto';
 
 import { FeedbackEvent } from '../persistence/feedback-event.entity';
 import { FeedbackEventDatesValidationPipe } from '../pipes/feedback-event-dates-validation.pipe';
-import { GetFeedbackEventsFilterDto } from '../dtos/get-feedback-events-filter.dto';
+
 import { AuthGuard } from '@nestjs/passport';
 
 import { PermissionsGuard } from '../../permissions/permission.guard';
@@ -50,9 +49,8 @@ export class FeedbackEventsController {
     params,
     @Req() request: any
   ): Promise<PaginatedResultsDto<FeedbackEvent>> {
-    console.log('params', params);
-
     const { user } = request;
+
     const getFeedbackEventsFilterDto = params;
 
     if (getFeedbackEventsFilterDto) {

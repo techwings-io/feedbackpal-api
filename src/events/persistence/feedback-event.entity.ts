@@ -1,4 +1,3 @@
-import { Optional } from '@nestjs/common';
 import {
   BaseEntity,
   Column,
