@@ -28,6 +28,9 @@ export class FeedbackController {
     @Req() request: any
   ) {
     const { user } = request;
+    if (typeof feedback.private === 'undefined') {
+      feedback.private = false;
+    }
     return await this.feedbackService.storeFeedback(feedback, user);
   }
 }

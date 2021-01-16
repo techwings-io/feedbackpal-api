@@ -1,5 +1,5 @@
 import { Optional } from '@nestjs/common';
-import { IsDateString, IsNotEmpty } from 'class-validator';
+import { IsBoolean, IsDateString, IsNotEmpty } from 'class-validator';
 import { Feeling } from 'src/shared/model/feeling.enum';
 
 export class CreateFeedbackDto {
@@ -11,6 +11,8 @@ export class CreateFeedbackDto {
   feeling: Feeling;
   @Optional()
   comments: string;
+  @IsBoolean()
+  private: boolean;
   @IsDateString()
   lastCreated: Date;
 }

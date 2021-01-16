@@ -6,5 +6,6 @@ export class FeedbackDto {
   createdBy: string;
   feeling: Feeling;
   comments: string;
+  private: boolean;
   lastCreated: Date;
 }

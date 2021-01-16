@@ -30,13 +30,14 @@ export class FeedbackService {
       throw new BadRequestException('Could not find event with id: ', eventId);
     }
 
-    const feedback = new Feedback();
+    let feedback = new Feedback();
     feedback.id = uuid();
     feedback.comments = createFeedbackDto.comments;
     feedback.createdBy = createFeedbackDto.createdBy;
     feedback.eventId = eventId;
     feedback.feeling = createFeedbackDto.feeling;
     feedback.lastCreated = createFeedbackDto.lastCreated;
+    feedback.private = createFeedbackDto.private;
     // Authorised
     const retValue = await this.feedbackRepository.createFeedbackEntry(
       feedback

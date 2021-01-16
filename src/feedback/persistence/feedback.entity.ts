@@ -24,6 +24,8 @@ export class Feedback extends BaseEntity {
   @Column()
   @Optional()
   comments: string;
+  @Column('boolean', { default: false })
+  private: boolean;
   @Column()
   lastCreated: Date;
 }
