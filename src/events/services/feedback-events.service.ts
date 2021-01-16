@@ -92,16 +92,6 @@ export class FeedbackEventsService {
     feedbackEvent: FeedbackEvent,
     user: any
   ): boolean {
-    console.log('feedbackEvent.publicEvent', feedbackEvent.publicEvent);
-    console.log(
-      'feedbackEvent.createdBy === user.sub',
-      feedbackEvent.createdBy === user.sub
-    );
-    console.log(
-      'feedbackEvent.usersToShareWith.includes(user.sub)',
-      feedbackEvent.usersToShareWith.includes(user.sub)
-    );
-
     if (feedbackEvent.publicEvent) {
       return true;
     }

@@ -1,4 +1,9 @@
-import { HttpService, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpService,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Observable, throwError } from 'rxjs';
@@ -82,6 +87,9 @@ export class JwtService {
   }
 
   async getUser(userId: string): Promise<Auth0UserModel> {
+    if (!userId) {
+      throw new NotFoundException('User not found');
+    }
     const response: any = await this.getAuth0AdminApiToken();
 
     const config: AxiosRequestConfig = {
