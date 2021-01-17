@@ -31,7 +31,6 @@ export class MyfeedbackpalService {
       paginationDto.limit = 10;
     }
     const skippedItems: number = (paginationDto.page - 1) * paginationDto.limit;
-    const totalCount = await this.feedbackRepository.count();
 
     const query = this.feedbackRepository
       .createQueryBuilder('feedback')
@@ -40,6 +39,7 @@ export class MyfeedbackpalService {
     query.andWhere('feedback.createdBy = :userId', { userId });
 
     const feedbacks: Feedback[] = await query.getMany();
+    const totalCount = await query.getCount();
     const feedbackData: MyFeedbacksDto[] = [];
     const results = new PaginatedResultsDto<MyFeedbacksDto>();
     const cachedEvents: Map<string, FeedbackEvent> = new Map();
